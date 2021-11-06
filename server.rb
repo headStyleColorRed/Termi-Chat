@@ -28,10 +28,7 @@ while true
   # Store new user and wellcome
   members.add(new_member)
   new_member.welcome(members)
-
-
-  # Close socket connection
-  socket.close
+  members.broadcast("[joined]", new_member)
 
   end
 end
