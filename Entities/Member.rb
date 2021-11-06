@@ -1,4 +1,5 @@
 # Stores an only readable username and his socket connection
+
 class Member
   attr_reader :username, :socket
 
