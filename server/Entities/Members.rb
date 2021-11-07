@@ -6,8 +6,8 @@ class Members
     @members = []
   end
 
-  def each
-    @members.each { |member| yield member }
+  def each(&block)
+    @members.each(&block)
   end
 
   def add(member)
