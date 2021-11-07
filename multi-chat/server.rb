@@ -2,8 +2,8 @@
 require 'socket'
 
 # Modules
-require './Entities/Member'
-require './Entities/Members'
+require './entities/member'
+require './entities/members'
 
 # Variables
 PORT = 2000
@@ -17,6 +17,7 @@ puts "Server running on port #{PORT}..."
 loop do
   # Set new socket connection on new thread
   tcp_socket = server.accept
+  # Create new thread
   Thread.new(tcp_socket) do |socket|
     member = members.register(socket)
     members.listen_for_input(socket, member)
