@@ -1,0 +1,65 @@
+<html>
+
+<head>
+  <script>
+    let chatRoomId = "29eihcf892q"
+    let userId = "B8CC43BA-514B"
+    var ws = null
+
+    function init() {
+      function debug(data) {
+        var element = document.getElementById("debug");
+        var p = document.createElement("p");
+
+
+        if (data["sender"] == undefined) {
+          p.appendChild(document.createTextNode(`>${data}`));
+        } else {
+          p.appendChild(document.createTextNode(`>${data.sender.name}: ${data.message}`));
+        }
+        element.appendChild(p);
+      }
+
+      var Socket = "MozWebSocket" in window ? MozWebSocket : WebSocket;
+
+      ws = new Socket(`ws://localhost:2000/${chatRoomId}?userId=${userId}`);
+      ws.onmessage = function (evt) {
+        if (evt.data === "Handshake Confirmation") { return }
+        debug(JSON.parse(evt.data));
+      };
+      ws.onclose = function (event) {
+        debug("Closed - code: " + event.code + ", reason: " + event.reason + ", wasClean: " + event.wasClean);
+      };
+      ws.onopen = function () {
+        debug("connected...");
+      };
+    };
+
+    function sendMessage() {
+      var element = document.getElementById("inputText")
+
+      let newMessage = {
+        "date": "2021-11-09 20:52:16",
+        "id": Math.random().toString(36).substr(2, 9),
+        "message": element.value,
+        "sender": {
+          "id": userId,
+          "name": "Ana"
+        },
+        "chatroom": chatRoomId
+      }
+      let stringifiedMessage = JSON.stringify(newMessage)
+      console.log(stringifiedMessage);
+      ws.send(stringifiedMessage)
+      element.value = new String()
+    }
+  </script>
+</head>
+
+<body onload="init();">
+  <div id="debug"></div>
+  <input type="text" id="inputText">
+  <button onclick="sendMessage()">Send</button>
+</body>
+
+</html>
